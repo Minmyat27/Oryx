@@ -34,8 +34,6 @@ namespace Microsoft.Oryx.BuildImage.Tests
                     SdkStorageConstants.SdkStorageBaseUrlKeyName,
                     SdkStorageConstants.DevSdkStorageBaseUrl)
                 .AddBuildCommand($"{appDir} -o {appOutputDir}")
-                .AddDirectoryExistsCheck($"{appOutputDir}/node_modules/@babel")
-                .AddDirectoryExistsCheck($"{appOutputDir}/node_modules/abbrev")
                 .ToString();
 
             // Act
