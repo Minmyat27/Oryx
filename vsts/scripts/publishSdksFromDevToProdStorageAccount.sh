@@ -11,6 +11,7 @@ source $REPO_DIR/build/__variables.sh
 source $REPO_DIR/build/__sdkStorageConstants.sh
 
 azCopyDir="/tmp/azcopy-tool"
+copiedBlobsLogFile="/tmp/copiedBlobs.txt"
 
 function blobExistsInProd() {
 	local containerName="$1"
@@ -44,6 +45,8 @@ function copyBlob() {
         echo
         echo "Blob '$blobName' already exists in Prod storage container '$platformName'. Skipping copying it..."
     else
+        echo "$blobName" >> "$copiedBlobsLogFile"
+
         echo
         echo "Blob '$blobName' does not exist in Prod storage container '$platformName'. Copying it..."
         "$azCopyDir/azcopy" copy \
@@ -102,3 +105,11 @@ copyPlatformBlobsToProd "php-composer"
 copyPlatformBlobsToProd "ruby"
 copyPlatformBlobsToProd "java"
 copyPlatformBlobsToProd "maven"
+
+echo
+echo "List of blobs which were copied to Prod storage account:"
+if [ -f "$copiedBlobsLogFile" ]; then
+    cat $copiedBlobsLogFile
+else
+    echo "No blobs were copied."
+fi
