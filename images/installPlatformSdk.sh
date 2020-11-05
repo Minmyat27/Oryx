@@ -55,9 +55,9 @@ dirToInstall="$baseTagetDir/$platformName/$platformVersion"
 PLATFORM_SETUP_START=$SECONDS
 echo
 echo "Downloading and extracting '$platformName' version '$platformVersion' to '$dirToInstall'..."
-rm -rf $dirToInstall
-mkdir -p $dirToInstall
-cd $dirToInstall
+rm -rf "$dirToInstall"
+mkdir -p "$dirToInstall"
+cd "$dirToInstall"
 PLATFORM_BINARY_DOWNLOAD_START=$SECONDS
 curl -D headers.txt \
     -SL \
@@ -65,16 +65,16 @@ curl -D headers.txt \
     --output $downloadedFileName >/dev/null 2>&1
 PLATFORM_BINARY_DOWNLOAD_ELAPSED_TIME=$(($SECONDS - $PLATFORM_BINARY_DOWNLOAD_START))
 echo "Downloaded in $PLATFORM_BINARY_DOWNLOAD_ELAPSED_TIME sec(s)."
-echo Verifying checksum...
+echo "Verifying checksum..."
 headerName="x-ms-meta-checksum"
 checksumHeader=$(cat headers.txt | grep -i $headerName: | tr -d '\r')
 checksumHeader=$(echo $checksumHeader | tr '[A-Z]' '[a-z]')
 checksumValue=${checksumHeader#"$headerName: "}
 rm -f headers.txt
 echo "$checksumValue $downloadedFileName" | sha512sum -c - >/dev/null 2>&1
-echo Extracting contents...
-tar -xzf $downloadedFileName -C .
-rm -f $downloadedFileName
+echo "Extracting contents..."
+tar -xzf "$downloadedFileName" -C .
+rm -f "$downloadedFileName"
 PLATFORM_SETUP_ELAPSED_TIME=$(($SECONDS - $PLATFORM_SETUP_START))
 echo "Done in $PLATFORM_SETUP_ELAPSED_TIME sec(s)."
 echo
